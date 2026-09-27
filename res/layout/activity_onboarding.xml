@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/space_black">
+
+    <com.drex.hyperion.StarfieldView
+        android:layout_width="match_parent" android:layout_height="match_parent" />
+
+    <LinearLayout android:id="@+id/slide_content"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center" android:orientation="vertical"
+        android:padding="32dp">
+
+        <ImageView android:id="@+id/slide_icon"
+            android:layout_width="120dp" android:layout_height="120dp"
+            android:src="@drawable/ic_launcher_hyperion" />
+
+        <TextView android:id="@+id/slide_title"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Hyperion" android:textColor="@color/text_main"
+            android:textSize="30sp" android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView android:id="@+id/slide_desc"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="" android:textColor="@color/text_muted"
+            android:textSize="16sp" android:gravity="center" android:lineSpacingExtra="4dp" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/dots"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_above="@+id/onboard_buttons"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:orientation="horizontal" />
+
+    <LinearLayout android:id="@+id/onboard_buttons"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" android:padding="24dp"
+        android:gravity="center_vertical">
+
+        <TextView android:id="@+id/btn_skip"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/onboard_skip" android:textColor="@color/text_muted"
+            android:textSize="16sp" android:padding="12dp" />
+
+        <View android:layout_width="0dp" android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView android:id="@+id/btn_next"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/btn_primary"
+            android:text="@string/onboard_next" android:textColor="#FFFFFF"
+            android:textSize="16sp" android:textStyle="bold"
+            android:paddingLeft="34dp" android:paddingRight="34dp"
+            android:paddingTop="14dp" android:paddingBottom="14dp" />
+    </LinearLayout>
+</RelativeLayout>

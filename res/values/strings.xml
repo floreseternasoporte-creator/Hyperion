@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="onboard_skip">Omitir</string>
+    <string name="onboard_next">Siguiente</string>
+    <string name="onboard_start">Empezar</string>
+    <string name="tab_vpn">VPN</string>
+    <string name="tab_speed">Velocidad</string>
+    <string name="tab_security">Seguridad</string>
+    <string name="tab_battery">Batería</string>
+    <string name="tab_mobile">Móvil</string>
+</resources>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:background="@drawable/card_bg"
+    android:padding="14dp" android:layout_marginTop="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+
+        <TextView android:id="@+id/threat_badge"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="PELIGRO" android:textSize="11sp" android:textStyle="bold"
+            android:textColor="#FFFFFF" android:background="#FF4D5E"
+            android:paddingLeft="10dp" android:paddingRight="10dp"
+            android:paddingTop="4dp" android:paddingBottom="4dp" />
+
+        <TextView android:id="@+id/threat_name"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginStart="10dp"
+            android:text="" android:textColor="@color/text_main"
+            android:textSize="15sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/threat_detail"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="" android:textColor="@color/text_muted"
+        android:textSize="13sp" android:lineSpacingExtra="3dp" />
+
+    <TextView android:id="@+id/threat_pkg"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="" android:textColor="@color/text_muted"
+        android:textSize="11sp" android:singleLine="true"
+        android:ellipsize="middle" />
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginTop="10dp">
+
+        <TextView android:id="@+id/threat_action"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center"
+            android:background="@drawable/btn_primary"
+            android:text="Desinstalar" android:textColor="#FFFFFF"
+            android:textSize="13sp" android:textStyle="bold"
+            android:paddingTop="10dp" android:paddingBottom="10dp" />
+
+        <TextView android:id="@+id/threat_quarantine"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center"
+            android:layout_marginStart="8dp" android:background="@drawable/card_bg"
+            android:text="Cuarentena de red" android:textColor="@color/cyan"
+            android:textSize="13sp" android:textStyle="bold"
+            android:paddingTop="10dp" android:paddingBottom="10dp" />
+    </LinearLayout>
+</LinearLayout>

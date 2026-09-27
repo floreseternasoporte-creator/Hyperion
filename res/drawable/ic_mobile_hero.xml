@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Torre de señal con anillo orbital — Hyperion Mobile -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="96" android:viewportHeight="96">
+
+    <path android:fillColor="#0B0F22" android:pathData="M0,0h96v96h-96z" />
+
+    <path android:fillColor="#00000000" android:strokeColor="#35E0FF"
+        android:strokeWidth="2.5"
+        android:pathData="M48,88 L40,52 L56,52 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#35E0FF"
+        android:strokeWidth="2.5"
+        android:pathData="M40,52 L48,20 L56,52" />
+    <circle android:fillColor="#35E0FF" cx="48" cy="18" r="3.5" />
+
+    <!-- ondas de señal -->
+    <path android:fillColor="#00000000" android:strokeColor="#35E0FF"
+        android:strokeWidth="2.2" android:strokeLineCap="round"
+        android:pathData="M38,30 a16,16 0 0,1 20,0" />
+    <path android:fillColor="#00000000" android:strokeColor="#7D5CFF"
+        android:strokeWidth="2.2" android:strokeLineCap="round" android:strokeAlpha="0.8"
+        android:pathData="M32,24 a26,26 0 0,1 32,0" />
+
+    <!-- anillo orbital -->
+    <ellipse android:fillColor="#00000000" android:strokeColor="#35E0FF"
+        android:strokeWidth="1.6" android:strokeAlpha="0.55"
+        cx="48" cy="48" rx="40" ry="14" />
+
+    <!-- satélite en el anillo -->
+    <circle android:fillColor="#FFFFFF" cx="82" cy="56" r="3" />
+    <circle android:fillColor="#35E0FF" cx="82" cy="56" r="1.4" />
+</vector>

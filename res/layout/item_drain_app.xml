@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:paddingTop="10dp" android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/app_name"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="App" android:textColor="@color/text_main"
+                android:textSize="15sp" android:textStyle="bold" />
+            <TextView android:id="@+id/app_sub"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="–" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+        <TextView android:id="@+id/app_impact"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="–" android:textSize="12sp" android:textStyle="bold"
+            android:paddingLeft="10dp" android:paddingRight="10dp"
+            android:paddingTop="4dp" android:paddingBottom="4dp"
+            android:background="@drawable/card_bg" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="6dp"
+        android:orientation="horizontal" android:layout_marginTop="8dp"
+        android:background="#14203A">
+        <View android:id="@+id/drain_bar"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="0.1" android:background="@color/cyan" />
+        <View android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="0.9" />
+    </LinearLayout>
+</LinearLayout>

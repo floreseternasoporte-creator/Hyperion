@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/speed_screen"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="MEDIDOR DE VELOCIDAD" android:textColor="@color/cyan"
+            android:textSize="13sp" android:letterSpacing="0.35"
+            android:layout_marginTop="12dp" />
+
+        <com.drex.hyperion.SpeedGaugeView
+            android:id="@+id/speed_gauge"
+            android:layout_width="280dp" android:layout_height="190dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView android:id="@+id/speed_phase"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Listo para medir" android:textColor="@color/text_muted"
+            android:textSize="14sp" android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="18dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginEnd="6dp">
+                <TextView android:id="@+id/speed_ping"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="—" android:textColor="@color/cyan"
+                    android:textSize="20sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Ping (ms)" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp">
+                <TextView android:id="@+id/speed_down"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="—" android:textColor="@color/safe"
+                    android:textSize="20sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Bajada (Mbps)" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginStart="6dp">
+                <TextView android:id="@+id/speed_up"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="—" android:textColor="@color/indigo"
+                    android:textSize="20sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Subida (Mbps)" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:id="@+id/btn_measure"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" android:background="@drawable/btn_primary"
+            android:gravity="center" android:padding="16dp"
+            android:text="MEDIR VELOCIDAD" android:textColor="#FFFFFF"
+            android:textSize="16sp" android:textStyle="bold" />
+
+        <TextView android:id="@+id/btn_optimize"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:background="@drawable/card_bg"
+            android:gravity="center" android:padding="16dp"
+            android:text="⚡ OPTIMIZAR CONEXIÓN" android:textColor="@color/cyan"
+            android:textSize="15sp" android:textStyle="bold" />
+
+        <LinearLayout android:id="@+id/optimize_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/card_bg"
+            android:padding="16dp" android:layout_marginTop="12dp"
+            android:visibility="gone">
+            <TextView android:id="@+id/optimize_text"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="" android:textColor="@color/text_main"
+                android:textSize="14sp" android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="QUÉ HACE HYPERION DE VERDAD" android:textColor="@color/cyan"
+            android:textSize="13sp" android:letterSpacing="0.35"
+            android:layout_marginTop="22dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/card_bg"
+            android:padding="16dp" android:layout_marginTop="10dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⚡ DNS ultrarrápido" android:textColor="@color/cyan"
+                android:textSize="15sp" android:textStyle="bold" />
+            <TextView android:id="@+id/boost_dns_value"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="1.1.1.1 / 8.8.8.8" android:textColor="@color/text_main"
+                android:textSize="20sp" android:textStyle="bold"
+                android:layout_marginTop="6dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Tus consultas van a 1.1.1.1 en vez del DNS lento de tu operadora. Sin root, esto sí reduce la latencia al abrir sitios y apps."
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:lineSpacingExtra="4dp" android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/card_bg"
+            android:padding="16dp" android:layout_marginTop="10dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🛡 Bloqueo de rastreadores" android:textColor="@color/cyan"
+                android:textSize="15sp" android:textStyle="bold" />
+            <TextView android:id="@+id/boost_block_value"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="—" android:textColor="@color/text_main"
+                android:textSize="20sp" android:textStyle="bold"
+                android:layout_marginTop="6dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Dominios de anuncios, rastreadores y telemetría bloqueados a nivel DNS: menos conexiones, menos datos, páginas que cargan antes."
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:lineSpacingExtra="4dp" android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/card_bg"
+            android:padding="16dp" android:layout_marginTop="10dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="💾 Caché DNS local" android:textColor="@color/cyan"
+                android:textSize="15sp" android:textStyle="bold" />
+            <TextView android:id="@+id/boost_cache_value"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="90 s" android:textColor="@color/text_main"
+                android:textSize="20sp" android:textStyle="bold"
+                android:layout_marginTop="6dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Los sitios que repites se resuelven al instante en el teléfono, sin salir a la red."
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:lineSpacingExtra="4dp" android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="18dp" android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg" android:padding="16dp"
+            android:text="Nota honesta: la velocidad bruta (Mbps) la pone tu operadora — ninguna app puede aumentarla sin root. Lo que Hyperion sí hace: resolver DNS más rápido y eliminar el desperdicio de rastreadores y anuncios."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+    </LinearLayout>
+</ScrollView>

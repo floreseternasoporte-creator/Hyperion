@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="space_black">#05070F</color>
+    <color name="space_panel">#0B0F22</color>
+    <color name="space_card">#10142B</color>
+    <color name="indigo">#4D5DFF</color>
+    <color name="indigo_deep">#2F33B8</color>
+    <color name="cyan">#35E0FF</color>
+    <color name="cyan_dim">#1B7FA6</color>
+    <color name="text_main">#EDEFFF</color>
+    <color name="text_muted">#8A90B8</color>
+    <color name="danger">#FF4D5E</color>
+    <color name="warn">#FFB020</color>
+    <color name="safe">#3DFF9C</color>
+</resources>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/battery_screen"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- Cabecera -->
+        <LinearLayout android:id="@+id/battery_header"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="BATERÍA HYPERION" android:textColor="@color/cyan"
+                android:textSize="13sp" android:letterSpacing="0.35"
+                android:layout_marginTop="12dp" />
+
+            <TextView android:id="@+id/battery_state"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Leyendo batería…" android:textColor="@color/text_muted"
+                android:textSize="22sp" android:textStyle="bold"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- Medidor -->
+        <LinearLayout android:id="@+id/battery_gauge_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="center_horizontal"
+            android:background="@drawable/card_bg"
+            android:padding="22dp" android:layout_marginTop="18dp">
+
+            <FrameLayout android:id="@+id/battery_gauge_box"
+                android:layout_width="200dp" android:layout_height="200dp">
+
+                <TextView android:id="@+id/battery_gauge_pct"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="–" android:textColor="@color/text_main"
+                    android:textSize="44sp" android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView android:id="@+id/battery_eta"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Estimando autonomía…"
+                android:textColor="@color/text_muted" android:textSize="14sp"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+        <!-- Datos técnicos -->
+        <LinearLayout android:id="@+id/battery_stats_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="DIAGNÓSTICO" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginTop="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Nivel" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_level" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Temperatura" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_temp" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginTop="10dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Voltaje" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_volt" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Salud" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_health" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginTop="10dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Tecnología" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_tech" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Estado" android:textColor="@color/text_muted"
+                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/battery_stat_state" android:text="–"
+                        android:textColor="@color/text_main" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Análisis de consumo -->
+        <LinearLayout android:id="@+id/battery_scan_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="ANÁLISIS DE CONSUMO (24 H)" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <LinearLayout android:id="@+id/battery_perm_card"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Para detectar las apps tragonas, concede el acceso a estadísticas de uso."
+                    android:textColor="@color/text_main" android:textSize="14sp"
+                    android:lineSpacingExtra="4dp" />
+
+                <Button android:id="@+id/battery_perm_btn"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                    android:text="Conceder acceso" android:textColor="#FFFFFF"
+                    android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+            </LinearLayout>
+
+            <TextView android:id="@+id/battery_apps_empty"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Pulsa «Analizar» para detectar las apps que más batería consumen."
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:layout_marginTop="12dp" />
+
+            <LinearLayout android:id="@+id/battery_apps"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:layout_marginTop="6dp" />
+
+            <Button android:id="@+id/battery_scan"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                android:text="Analizar consumo" android:textColor="#FFFFFF"
+                android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+
+            <TextView android:id="@+id/battery_scan_status"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Optimizar -->
+        <LinearLayout android:id="@+id/battery_opt_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="OPTIMIZACIÓN" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Cierra los procesos en segundo plano de las apps detectadas y te guía para restringir su actividad."
+                android:textColor="@color/text_main" android:textSize="14sp"
+                android:lineSpacingExtra="4dp" android:layout_marginTop="10dp" />
+
+            <Button android:id="@+id/battery_optimize"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                android:text="Optimizar ahora" android:textColor="#FFFFFF"
+                android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+
+            <TextView android:id="@+id/battery_optimize_status"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Protección de carga -->
+        <LinearLayout android:id="@+id/battery_guard_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="PROTECCIÓN DE CARGA" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Cargar hasta el 80% alarga la vida útil de la batería. Te avisamos al llegar."
+                android:textColor="@color/text_main" android:textSize="14sp"
+                android:lineSpacingExtra="4dp" android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <TextView android:text="Avisar al 80% de carga"
+                    android:textColor="@color/text_main" android:textSize="15sp"
+                    android:textStyle="bold" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1" />
+                <Switch android:id="@+id/battery_guard_80"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <TextView android:text="Avisar al 100% de carga"
+                    android:textColor="@color/text_main" android:textSize="15sp"
+                    android:textStyle="bold" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1" />
+                <Switch android:id="@+id/battery_guard_100"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Nota honesta -->
+        <TextView android:id="@+id/battery_honest_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg" android:padding="16dp"
+            android:text="Android no permite que una app apague otras por la fuerza: Hyperion cierra sus procesos en segundo plano y te guía a los ajustes del sistema para restringirlas. La autonomía mostrada es una estimación según tu ritmo de descarga reciente."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/security_screen"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="CENTINELA" android:textColor="@color/cyan"
+            android:textSize="13sp" android:letterSpacing="0.35"
+            android:layout_marginTop="12dp" />
+
+        <TextView android:id="@+id/sec_status"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Sin escanear" android:textColor="@color/text_main"
+            android:textSize="24sp" android:textStyle="bold"
+            android:layout_marginTop="6dp" />
+
+        <FrameLayout
+            android:layout_width="240dp" android:layout_height="240dp"
+            android:layout_marginTop="14dp">
+
+            <com.drex.hyperion.RadarView
+                android:id="@+id/sec_radar"
+                android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            <TextView android:id="@+id/sec_progress"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="" android:textColor="@color/cyan"
+                android:textSize="22sp" android:textStyle="bold" />
+        </FrameLayout>
+
+        <TextView android:id="@+id/sec_current"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:gravity="center"
+            android:text="" android:textColor="@color/text_muted"
+            android:textSize="12sp" android:singleLine="true"
+            android:ellipsize="middle" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginTop="14dp" android:background="@drawable/card_bg"
+            android:padding="12dp">
+
+            <TextView android:id="@+id/sec_sigdb"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Base v– · —" android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+
+            <TextView android:id="@+id/btn_sigdb_update"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/btn_primary"
+                android:text="Actualizar base" android:textColor="#FFFFFF"
+                android:textSize="13sp" android:textStyle="bold"
+                android:paddingLeft="16dp" android:paddingRight="16dp"
+                android:paddingTop="8dp" android:paddingBottom="8dp" />
+        </LinearLayout>
+
+        <TextView android:id="@+id/btn_scan"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="18dp" android:background="@drawable/btn_primary"
+            android:gravity="center" android:padding="16dp"
+            android:text="🛡 ESCANEAR TELÉFONO" android:textColor="#FFFFFF"
+            android:textSize="16sp" android:textStyle="bold" />
+
+        <TextView android:id="@+id/sec_summary"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp" android:background="@drawable/card_bg"
+            android:padding="16dp" android:visibility="gone"
+            android:text="" android:textColor="@color/text_main"
+            android:textSize="14sp" android:lineSpacingExtra="4dp" />
+
+        <LinearLayout android:id="@+id/sec_threats"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="ESCANEOS ANTERIORES" android:textColor="@color/text_muted"
+            android:textSize="12sp" android:letterSpacing="0.25" />
+
+        <LinearLayout android:id="@+id/sec_history"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg" android:padding="16dp"
+            android:text="Centinela analiza las apps instaladas en 4 fases visibles: compara el SHA-256 del APK con la base de firmas (actualizable desde GitHub), inspecciona el código buscando APIs de malware, revisa el certificado firmante y audita combinaciones de permisos peligrosas. Al instalarse una app nueva la revisa en tiempo real, y las amenazas se pueden desinstalar o poner en cuarentena de red."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+    </LinearLayout>
+</ScrollView>

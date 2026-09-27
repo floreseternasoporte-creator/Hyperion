@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/space_black">
+
+    <com.drex.hyperion.StarfieldView
+        android:layout_width="match_parent" android:layout_height="match_parent" />
+
+    <FrameLayout android:id="@+id/screen_container"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar"
+        android:clipChildren="false" android:clipToPadding="false">
+
+        <include layout="@layout/screen_vpn" />
+        <include layout="@layout/screen_speed" />
+        <include layout="@layout/screen_security" />
+        <include layout="@layout/screen_shield" />
+        <include layout="@layout/screen_battery" />
+        <include layout="@layout/screen_mobile" />
+    </FrameLayout>
+
+    <LinearLayout android:id="@+id/bottom_bar"
+        android:layout_width="match_parent" android:layout_height="76dp"
+        android:layout_alignParentBottom="true"
+        android:background="#CC0B0F22"
+        android:gravity="center" android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <LinearLayout android:id="@+id/tab_vpn"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_vpn_icon"
+                android:layout_width="28dp" android:layout_height="28dp"
+                android:src="@drawable/ic_tab_vpn" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/tab_vpn" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tab_speed"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_speed_icon"
+                android:layout_width="28dp" android:layout_height="28dp"
+                android:src="@drawable/ic_tab_speed" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/tab_speed" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tab_security"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_security_icon"
+                android:layout_width="28dp" android:layout_height="28dp"
+                android:src="@drawable/ic_tab_security" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/tab_security" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tab_shield"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_shield_icon"
+                android:layout_width="28dp" android:layout_height="28dp"
+                android:src="@drawable/ic_tab_shield" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Escudo" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tab_battery"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_battery_icon"
+                android:layout_width="26dp" android:layout_height="26dp"
+                android:src="@drawable/ic_tab_battery" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/tab_battery" android:textColor="@color/text_muted"
+                android:textSize="11sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tab_mobile"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical">
+            <ImageView android:id="@+id/tab_mobile_icon"
+                android:layout_width="26dp" android:layout_height="26dp"
+                android:src="@drawable/ic_tab_mobile" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/tab_mobile" android:textColor="@color/text_muted"
+                android:textSize="11sp" android:layout_marginTop="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View android:id="@+id/tab_indicator"
+        android:layout_width="48dp" android:layout_height="3dp"
+        android:layout_alignParentBottom="true" android:layout_marginBottom="4dp"
+        android:background="@drawable/dot_active" />
+</RelativeLayout>

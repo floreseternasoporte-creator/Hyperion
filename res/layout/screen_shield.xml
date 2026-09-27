@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shield_screen"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- Cabecera -->
+        <LinearLayout android:id="@+id/shield_header"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="ESCUDO HYPERION" android:textColor="@color/cyan"
+                android:textSize="13sp" android:letterSpacing="0.35"
+                android:layout_marginTop="12dp" />
+
+            <TextView android:id="@+id/shield_status"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Protección inactiva" android:textColor="@color/text_muted"
+                android:textSize="22sp" android:textStyle="bold"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- Contador gigante -->
+        <LinearLayout android:id="@+id/shield_counter_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="center"
+            android:background="@drawable/card_bg"
+            android:padding="22dp" android:layout_marginTop="18dp">
+
+            <TextView android:id="@+id/shield_counter"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textColor="@color/cyan"
+                android:textSize="52sp" android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="peticiones bloqueadas" android:textColor="@color/text_muted"
+                android:textSize="13sp" android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Anillo de progreso hacia 1 GB -->
+        <LinearLayout android:id="@+id/shield_ring_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="center_horizontal"
+            android:background="@drawable/card_bg"
+            android:padding="22dp" android:layout_marginTop="12dp">
+
+            <FrameLayout android:id="@+id/shield_ring_box"
+                android:layout_width="200dp" android:layout_height="200dp">
+
+                <TextView android:id="@+id/shield_ring_pct"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0%" android:textColor="@color/text_main"
+                    android:textSize="30sp" android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView android:id="@+id/shield_saved"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0 B ahorrados de 1 GB · estimado"
+                android:textColor="@color/text_main" android:textSize="15sp"
+                android:textStyle="bold" android:layout_marginTop="12dp" />
+
+            <TextView android:id="@+id/shield_projection"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Midiendo tu ritmo…"
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Toggles por categoría -->
+        <LinearLayout android:id="@+id/shield_toggles_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="QUÉ BLOQUEA EL ESCUDO" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Anuncios" android:textColor="@color/text_main"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/shield_n_ads" android:text="0 bloqueados"
+                        android:textColor="@color/text_muted" android:textSize="12sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <Switch android:id="@+id/shield_tgl_ads"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Rastreadores y telemetría" android:textColor="@color/text_main"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/shield_n_trackers" android:text="0 bloqueados"
+                        android:textColor="@color/text_muted" android:textSize="12sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <Switch android:id="@+id/shield_tgl_trackers"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Malware y phishing" android:textColor="@color/text_main"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/shield_n_threats" android:text="0 bloqueados"
+                        android:textColor="@color/text_muted" android:textSize="12sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <Switch android:id="@+id/shield_tgl_threats"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:text="Cryptominers" android:textColor="@color/text_main"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:id="@+id/shield_n_miners" android:text="0 bloqueados"
+                        android:textColor="@color/text_muted" android:textSize="12sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <Switch android:id="@+id/shield_tgl_miners"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Actualización de listas -->
+        <LinearLayout android:id="@+id/shield_update_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView android:id="@+id/shield_lists"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="… dominios · listas v1"
+                android:textColor="@color/text_main" android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Button android:id="@+id/shield_update"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                android:text="Actualizar listas" android:textColor="#FFFFFF"
+                android:textSize="15sp" android:textStyle="bold"
+                android:padding="12dp" />
+
+            <TextView android:id="@+id/shield_update_status"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Apps que más consumían -->
+        <LinearLayout android:id="@+id/shield_apps_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="18dp" android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="APPS QUE MÁS CONSUMÍAN" android:textColor="@color/text_muted"
+                android:textSize="12sp" android:letterSpacing="0.25" />
+
+            <TextView android:id="@+id/shield_apps_empty"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Aún no hay datos: activa la protección y navega un rato."
+                android:textColor="@color/text_muted" android:textSize="13sp"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout android:id="@+id/shield_apps"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- Nota honesta -->
+        <TextView android:id="@+id/shield_honest_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg" android:padding="16dp"
+            android:text="Hyperion no regala datos: recupera los que los anuncios y rastreadores te robaban. El ahorro mostrado es una estimación (cada petición bloqueada evita una descarga aproximada: anuncios ~120 KB, rastreadores ~40 KB, amenazas ~60 KB, mineros ~80 KB), no una medición exacta de tu operadora."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+    </LinearLayout>
+</ScrollView>

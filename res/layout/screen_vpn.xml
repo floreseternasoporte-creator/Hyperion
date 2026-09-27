@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vpn_screen"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="HYPERION SHIELD" android:textColor="@color/cyan"
+            android:textSize="13sp" android:letterSpacing="0.35"
+            android:layout_marginTop="12dp" />
+
+        <TextView android:id="@+id/vpn_status"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Desconectado" android:textColor="@color/text_main"
+            android:textSize="26sp" android:textStyle="bold"
+            android:layout_marginTop="6dp" />
+
+        <FrameLayout
+            android:layout_width="260dp" android:layout_height="260dp"
+            android:layout_marginTop="18dp">
+
+            <com.drex.hyperion.PulseRingView
+                android:id="@+id/vpn_pulse"
+                android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            <com.drex.hyperion.LaunchButton
+                android:id="@+id/vpn_button"
+                android:layout_width="190dp" android:layout_height="190dp"
+                android:layout_gravity="center" />
+
+            <com.drex.hyperion.ParticleBurstView
+                android:id="@+id/vpn_burst"
+                android:layout_width="match_parent" android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <TextView android:id="@+id/vpn_hint"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Toca para activar la protección"
+            android:textColor="@color/text_muted" android:textSize="14sp"
+            android:layout_marginTop="14dp" />
+
+        <!-- Banner persistente de desconexión: grande, rojo, imposible de no ver -->
+        <Button android:id="@+id/vpn_disconnect"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp" android:background="@drawable/btn_danger"
+            android:text="DESCONECTAR" android:textColor="#FFFFFF"
+            android:textSize="17sp" android:textStyle="bold"
+            android:letterSpacing="0.12" android:padding="14dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="22dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginEnd="6dp">
+                <TextView android:id="@+id/vpn_time"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="00:00:00" android:textColor="@color/cyan"
+                    android:textSize="18sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Conectado" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginStart="6dp">
+                <TextView android:id="@+id/vpn_queries"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textColor="@color/cyan"
+                    android:textSize="18sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Consultas DNS" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="12dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginEnd="6dp">
+                <TextView android:id="@+id/vpn_blocked"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textColor="@color/danger"
+                    android:textSize="18sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Amenazas bloqueadas" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/card_bg"
+                android:orientation="vertical" android:gravity="center"
+                android:padding="14dp" android:layout_marginStart="6dp">
+                <TextView android:id="@+id/vpn_data"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0 KB" android:textColor="@color/cyan"
+                    android:textSize="18sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Datos filtrados" android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="18dp" android:background="@drawable/card_bg"
+            android:padding="16dp"
+            android:text="DNS ultrarrápido (1.1.1.1 · 8.8.8.8) con bloqueo de rastreadores, anuncios y dominios maliciosos. Tu tráfico normal sigue su ruta directa: solo el DNS pasa por el túnel local."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="UBICACIÓN" android:textColor="@color/text_muted"
+            android:textSize="12sp" android:letterSpacing="0.25" />
+
+        <!-- Modo activo real: túnel local en este teléfono (sin fingir países) -->
+        <LinearLayout android:id="@+id/vpn_local_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:background="@drawable/card_bg"
+            android:padding="14dp" android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+
+            <View android:id="@+id/vpn_local_dot"
+                android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@drawable/dot_idle" />
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Hyperion Local (este teléfono)"
+                    android:textColor="@color/text_main"
+                    android:textSize="15sp" android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Filtro DNS en tu dispositivo · sin servidor remoto"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <TextView android:id="@+id/vpn_local_badge"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="INACTIVO" android:textColor="@color/text_muted"
+                android:textSize="11sp" android:textStyle="bold"
+                android:letterSpacing="0.08" />
+        </LinearLayout>
+
+        <!-- Países remotos: todos "Próximamente", deshabilitados (nunca fingen conexión) -->
+        <LinearLayout android:id="@+id/vpn_countries"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="SESIONES RECIENTES" android:textColor="@color/text_muted"
+            android:textSize="12sp" android:letterSpacing="0.25" />
+
+        <LinearLayout android:id="@+id/vpn_history"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+    </LinearLayout>
+</ScrollView>

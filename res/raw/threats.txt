@@ -1,0 +1,15 @@
+miner:coinhive.com
+miner:coin-hive.com
+miner:cryptoloot.pro
+miner:crypto-loot.com
+miner:minero.cc
+miner:coinimp.com
+miner:jsecoin.com
+miner:webminepool.com
+miner:webminerpool.com
+miner:webmine.cz
+miner:ppoi.org
+miner:coin-have.com
+malware:vxvault.net
+malware:malc0de.com
+malware:malwaredomainlist.com
