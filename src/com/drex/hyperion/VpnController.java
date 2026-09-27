@@ -7,15 +7,23 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.drex.hyperion.ovpn.ConnectionStatus;
+import com.drex.hyperion.ovpn.OvpnConnector;
+import com.drex.hyperion.ovpn.OvpnVpnService;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/** Controlador de la pantalla VPN. */
+/** Controlador de la pantalla VPN: modo local + túneles OpenVPN reales (VPNGate). */
 public class VpnController {
     private final MainActivity activity;
     private final View root;
@@ -31,6 +39,16 @@ public class VpnController {
     private View localDot;
     private TextView localBadge;
     private LinearLayout countriesBox;
+
+    private List<VpnGateClient.CountryGroup> groups;
+    private boolean loadingServers;
+    private String remoteErrorShownFor = "";
+    /**
+     * Barrido Hyperion 2.2: stopService() es asíncrono — entre el tap de
+     * DESCONECTAR y onDestroy(), el poll re-encendía el botón (parpadeo
+     * "Protegido" fantasma). Este flag lo inhibe hasta que se confirma la caída.
+     */
+    private volatile boolean disconnecting;
 
     public VpnController(MainActivity activity, LayoutInflater inflater, View root) {
         this.activity = activity;
@@ -53,17 +71,24 @@ public class VpnController {
         button.setListener(new LaunchButton.Listener() {
             @Override public void onTap() { onButtonTap(); }
         });
-        // Banner grande de desconexión: imposible no verlo
+        // Banner grande de desconexión: detiene el modo que esté activo
         disconnectBanner.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { disconnect(); }
         });
         // Tarjeta local: toca para conectar cuando está inactiva
         root.findViewById(R.id.vpn_local_card).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (!HyperionVpnService.running.get()) connect();
+                if (!HyperionVpnService.running.get() && !OvpnConnector.isRunning()) connect();
             }
         });
-        renderCountries();
+        root.findViewById(R.id.vpn_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { loadServers(true); }
+        });
+        // "Acerca de": muestra el texto completo de la licencia GPL de ics-openvpn
+        root.findViewById(R.id.vpn_attribution).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showLicense(); }
+        });
+        loadServers(false);
         refreshHistory();
         poll.run();
     }
@@ -75,46 +100,208 @@ public class VpnController {
     }
 
     private void disconnect() {
-        activity.stopVpn();
+        disconnecting = true;
+        activity.stopVpn(); // detiene el modo activo (local o remoto)
         button.setConnected(false);
     }
 
+    /** El usuario canceló el diálogo de permiso VPN: soltar el botón
+     *  (si no, LaunchButton.launching quedaba true para siempre y el botón
+     *  moría: cada tap se tragaba en onTouchEvent). */
+    public void cancelLaunch() {
+        try { button.setConnected(false); } catch (Exception ignored) {}
+    }
+
     private void onButtonTap() {
-        if (HyperionVpnService.running.get()) {
+        if (HyperionVpnService.running.get() || OvpnConnector.isRunning()) {
             disconnect();
         } else {
-            // secuencia de lanzamiento y luego conexión
             connect();
         }
     }
 
-    /** Lista honesta de países: todos "Próximamente" y deshabilitados. */
-    private void renderCountries() {
+    // ---------- servidores VPNGate ----------
+
+    private void loadServers(final boolean force) {
+        if (loadingServers) return;
+        loadingServers = true;
+        final Context ctx = activity;
+        countriesBox.removeAllViews();
+        TextView t = new TextView(ctx);
+        t.setText(force ? "Actualizando lista de servidores…" : "Cargando servidores VPNGate…");
+        t.setTextColor(0xFF8A90B8); t.setTextSize(13);
+        t.setPadding(0, 8, 0, 8);
+        countriesBox.addView(t);
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final List<VpnGateServer> servers = VpnGateClient.load(ctx, force);
+                final List<VpnGateClient.CountryGroup> g =
+                        VpnGateClient.groupByCountry(servers);
+                handler.post(new Runnable() {
+                    @Override public void run() {
+                        loadingServers = false;
+                        groups = g;
+                        renderGroups();
+                    }
+                });
+            }
+        }, "VpnGateLoad").start();
+    }
+
+    /** Pinta los grupos desde la caché en memoria (sin red). */
+    private void repaintGroups() {
+        if (!loadingServers && groups != null) renderGroups();
+    }
+
+    private void renderGroups() {
         final Context ctx = activity;
         countriesBox.removeAllViews();
         LayoutInflater inf = LayoutInflater.from(ctx);
-        List<VpnCountries.Country> list = VpnCountries.load(ctx);
-        for (final VpnCountries.Country c : list) {
-            View v = inf.inflate(R.layout.item_country, countriesBox, false);
-            TextView name = v.findViewById(R.id.country_name);
-            TextView sub = v.findViewById(R.id.country_sub);
-            name.setText(c.country);
-            sub.setText(c.city + " · " + c.code);
-            // Deshabilitado de verdad: al tocarlo, diálogo honesto
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View vw) { showSoonDialog(c); }
+        boolean empty = groups == null || groups.isEmpty();
+        if (empty) {
+            TextView t = new TextView(ctx);
+            t.setText("Sin conexión: no se pudo descargar la lista de servidores. Toca «↻ Actualizar» para reintentar.");
+            t.setTextColor(0xFFFF9D5C); t.setTextSize(13);
+            t.setPadding(0, 8, 0, 8);
+            countriesBox.addView(t);
+            return;
+        }
+        for (final VpnGateClient.CountryGroup g : groups) {
+            View v = inf.inflate(R.layout.item_country_group, countriesBox, false);
+            ImageView flag = v.findViewById(R.id.group_flag);
+            TextView iso = v.findViewById(R.id.group_iso);
+            TextView name = v.findViewById(R.id.group_name);
+            TextView sub = v.findViewById(R.id.group_sub);
+            final TextView chevron = v.findViewById(R.id.group_chevron);
+            final LinearLayout serverBox = v.findViewById(R.id.group_servers);
+
+            flag.setImageResource(FlagDrawables.forIso(g.iso));
+            if (!FlagDrawables.hasFlag(g.iso)) {
+                iso.setText(g.iso);
+                iso.setVisibility(View.VISIBLE);
+            }
+            name.setText(g.nameEs);
+            int n = g.servers.size();
+            sub.setText(n + (n == 1 ? " servidor" : " servidores") + " · toca para ver");
+
+            // Filas de servidores (se crean al expandir)
+            for (final VpnGateServer s : g.servers) {
+                View sv = inf.inflate(R.layout.item_vpngate_server, serverBox, false);
+                TextView host = sv.findViewById(R.id.server_host);
+                TextView stats = sv.findViewById(R.id.server_stats);
+                final TextView badge = sv.findViewById(R.id.server_badge);
+                final View dot = sv.findViewById(R.id.server_dot);
+                host.setText(s.hostName + " · " + s.ip);
+                stats.setText(s.pingText() + " · " + s.numSessions + " sesiones · " + s.speedText());
+                paintServerRow(s, badge, dot);
+                sv.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View vw) { onServerTap(s); }
+                });
+                serverBox.addView(sv);
+            }
+
+            v.findViewById(R.id.group_header).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View vw) {
+                    boolean open = serverBox.getVisibility() == View.VISIBLE;
+                    serverBox.setVisibility(open ? View.GONE : View.VISIBLE);
+                    chevron.setText(open ? "▾" : "▴");
+                }
             });
             countriesBox.addView(v);
         }
     }
 
-    private void showSoonDialog(VpnCountries.Country c) {
+    private void paintServerRow(VpnGateServer s, TextView badge, View dot) {
+        boolean dead = OvpnVpnService.deadServers.contains(s.displayName());
+        boolean current = OvpnConnector.isRunning()
+                && OvpnVpnService.currentLabel.equals(s.displayName());
+        if (current) {
+            badge.setText("CONECTADO");
+            badge.setTextColor(0xFF3DFF9C);
+            dot.setBackgroundResource(R.drawable.dot_active);
+        } else if (dead) {
+            badge.setText("No disponible");
+            badge.setTextColor(0xFFFF9D5C);
+            dot.setBackgroundResource(R.drawable.dot_idle);
+        } else {
+            badge.setText("Conectar ›");
+            badge.setTextColor(0xFF4FD8FF);
+            dot.setBackgroundResource(R.drawable.dot_idle);
+        }
+    }
+
+    private void onServerTap(final VpnGateServer s) {
+        if (OvpnConnector.isRunning()) {
+            if (OvpnVpnService.currentLabel.equals(s.displayName())) {
+                disconnect(); // tocar el servidor activo = desconectar
+            } else {
+                new AlertDialog.Builder(activity)
+                        .setTitle("Cambiar de servidor")
+                        .setMessage("Ya hay un túnel activo (" + OvpnVpnService.currentLabel
+                                + "). ¿Desconectarlo y conectar a " + s.displayName() + "?")
+                        .setPositiveButton("Cambiar", new android.content.DialogInterface.OnClickListener() {
+                            @Override public void onClick(android.content.DialogInterface d, int w) {
+                                disconnect();
+                                handler.postDelayed(new Runnable() {
+                                    @Override public void run() { activity.startRemoteVpn(s); }
+                                }, 600);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+            }
+            return;
+        }
+        if (OvpnVpnService.deadServers.contains(s.displayName())) {
+            new AlertDialog.Builder(activity)
+                    .setTitle("Servidor no disponible")
+                    .setMessage(s.displayName() + " no respondió en esta sesión.\n\n"
+                            + "Los servidores VPNGate son voluntarios y cambian: prueba con otro de la lista.")
+                    .setPositiveButton("Entendido", null)
+                    .show();
+            return;
+        }
         new AlertDialog.Builder(activity)
-                .setTitle(c.country + " · Próximamente")
-                .setMessage(VpnCountries.soonMessage(c))
-                .setPositiveButton("Entendido", null)
+                .setTitle("Conectar a " + s.displayName())
+                .setMessage(s.hostName + "\nIP " + s.ip + " · " + s.pingText()
+                        + "\n" + s.numSessions + " sesiones activas · " + s.speedText()
+                        + "\n\nSe abrirá un túnel OpenVPN real. Todo tu tráfico pasará por este servidor gratuito (VPNGate).")
+                .setPositiveButton("Conectar", new android.content.DialogInterface.OnClickListener() {
+                    @Override public void onClick(android.content.DialogInterface d, int w) {
+                        remoteErrorShownFor = "";
+                        activity.startRemoteVpn(s);
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
                 .show();
     }
+
+    private void showLicense() {
+        String text = "No se pudo leer la licencia.";
+        try {
+            InputStream in = activity.getResources().openRawResource(R.raw.gpl_ics_openvpn);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            int n;
+            while ((n = in.read(buf)) > 0) bos.write(buf, 0, n);
+            in.close();
+            text = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+        } catch (Exception ignored) {}
+        TextView tv = new TextView(activity);
+        tv.setText(text);
+        tv.setTextSize(11);
+        tv.setTextColor(0xFFEDEFFF);
+        tv.setPadding(24, 16, 24, 16);
+        android.widget.ScrollView sv = new android.widget.ScrollView(activity);
+        sv.addView(tv);
+        new AlertDialog.Builder(activity)
+                .setTitle("Licencia del motor OpenVPN (ics-openvpn)")
+                .setView(sv)
+                .setPositiveButton("Cerrar", null)
+                .show();
+    }
+
+    // ---------- estado ----------
 
     public void setVisible(boolean v) {
         visible = v;
@@ -125,8 +312,11 @@ public class VpnController {
 
     private final Runnable poll = new Runnable() {
         @Override public void run() {
-            if (HyperionVpnService.running.get()) {
-                if (!button.isConnected()) {
+            boolean local = HyperionVpnService.running.get();
+            boolean remote = OvpnConnector.isRunning();
+
+            if (local) {
+                if (!button.isConnected() && !disconnecting) {
                     button.setConnected(true);
                     burst.burst(60);
                 }
@@ -145,7 +335,34 @@ public class VpnController {
                 long bytes = HyperionVpnService.stats.bytesIn.get()
                         + HyperionVpnService.stats.bytesOut.get();
                 data.setText(fmtBytes(bytes));
+            } else if (remote) {
+                if (!button.isConnected() && !disconnecting) {
+                    button.setConnected(true);
+                    burst.burst(60);
+                }
+                remoteErrorShownFor = "";
+                int level = OvpnVpnService.lastLevel;
+                if (level == ConnectionStatus.LEVEL_CONNECTED) {
+                    status.setText("Conectado");
+                    status.setTextColor(0xFF3DFF9C);
+                } else {
+                    status.setText("Conectando…");
+                    status.setTextColor(0xFFFFD35C);
+                }
+                hint.setText("Túnel OpenVPN · " + OvpnVpnService.currentLabel
+                        + " · toca DESCONECTAR para detener");
+                pulse.setActive(true);
+                disconnectBanner.setVisibility(View.VISIBLE);
+                localBadge.setText("INACTIVO");
+                localBadge.setTextColor(0xFF8A90B8);
+                localDot.setBackgroundResource(R.drawable.dot_idle);
+                long secs = (System.currentTimeMillis() - OvpnVpnService.connectedSince) / 1000;
+                time.setText(fmtTime(secs));
+                queries.setText("—");
+                blocked.setText("—");
+                data.setText("—");
             } else {
+                disconnecting = false; // el servicio confirmó la caída
                 if (button.isConnected()) button.setConnected(false);
                 status.setText("Desconectado");
                 status.setTextColor(0xFFEDEFFF);
@@ -155,10 +372,29 @@ public class VpnController {
                 localBadge.setText("INACTIVO");
                 localBadge.setTextColor(0xFF8A90B8);
                 localDot.setBackgroundResource(R.drawable.dot_idle);
+                maybeShowRemoteError();
             }
             handler.postDelayed(this, 1000);
         }
     };
+
+    /** Si el túnel remoto murió con error, avisar una vez y sugerir otro servidor. */
+    private void maybeShowRemoteError() {
+        String err = OvpnVpnService.lastError;
+        String label = OvpnVpnService.currentLabel;
+        if (err == null || err.isEmpty() || label.isEmpty()) return;
+        if (label.equals(remoteErrorShownFor)) return;
+        remoteErrorShownFor = label;
+        // Limpiar para no repetir en el próximo poll si el usuario no hace nada
+        OvpnVpnService.lastError = "";
+        new AlertDialog.Builder(activity)
+                .setTitle("No se pudo conectar")
+                .setMessage(label + "\n\n" + err)
+                .setPositiveButton("Elegir otro servidor", null)
+                .show();
+        // Refresca las insignias: el servidor fallido queda como "No disponible"
+        repaintGroups();
+    }
 
     private void refreshHistory() {
         final Context ctx = activity;

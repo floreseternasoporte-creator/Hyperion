@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Insignia genérica redondeada para países VPN (fallback): pensada para llevar
+         un código ISO en texto al lado. Globo neutro, sin bandera de ningún país. -->
+    <path android:fillColor="#0B0F22" android:strokeColor="#6C63FF"
+        android:strokeWidth="1.6"
+        android:pathData="M8,2.5 h8 a5.5,5.5 0 0,1 5.5,5.5 v8 a5.5,5.5 0 0,1 -5.5,5.5 H8 A5.5,5.5 0 0,1 2.5,16 V8 A5.5,5.5 0 0,1 8,2.5 z" />
+    <path android:fillColor="#00000000" android:strokeColor="#29E6FF"
+        android:strokeWidth="1.3"
+        android:pathData="M12,7 a5,5 0 1,0 0,10 a5,5 0 1,0 0,-10z" />
+    <path android:fillColor="#00000000" android:strokeColor="#29E6FF"
+        android:strokeWidth="1.1" android:strokeLineCap="round"
+        android:pathData="M7.7,9.7 h8.6 M7.7,14.3 h8.6 M12,7 c-1.9,2.1 -1.9,7.9 0,10 c1.9,-2.1 1.9,-7.9 0,-10 z" />
+</vector>

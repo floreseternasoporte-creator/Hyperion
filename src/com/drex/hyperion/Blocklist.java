@@ -9,6 +9,17 @@ import java.util.Set;
 public final class Blocklist {
     private Blocklist() {}
 
+    /**
+     * Dominios bootstrap de DNS cifrado (DoH/DoT). Fuente de verdad en código:
+     * {@code blocker.PacketUtil#DOH_DOMAINS} (el test verifica que coincide
+     * con {@code res/raw/doh.txt}). Se usan cuando AdBlocker no está
+     * disponible (fallback sin Android).
+     */
+    public static final String[] DOH_DOMAINS =
+            com.drex.hyperion.blocker.PacketUtil.DOH_DOMAINS;
+
+    private static final Set<String> DOH_SET = new HashSet<>(Arrays.asList(DOH_DOMAINS));
+
     private static final String[] DOMAINS = {
         // rastreadores / anuncios
         "doubleclick.net", "googlesyndication.com", "googleadservices.com",
@@ -75,4 +86,19 @@ public final class Blocklist {
     }
 
     public static int size() { return DOMAINS.length; }
+
+    /** true si el dominio (o su padre) es un bootstrap DoH/DoT conocido. */
+    public static boolean isDohHost(String domain) {
+        if (domain == null) return false;
+        String d = domain.toLowerCase(Locale.US);
+        if (d.endsWith(".")) d = d.substring(0, d.length() - 1);
+        while (true) {
+            if (DOH_SET.contains(d)) return true;
+            int dot = d.indexOf('.');
+            if (dot < 0) return false;
+            d = d.substring(dot + 1);
+        }
+    }
+
+    public static int dohSize() { return DOH_DOMAINS.length; }
 }

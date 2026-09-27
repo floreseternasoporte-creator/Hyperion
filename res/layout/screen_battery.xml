@@ -189,7 +189,7 @@
 
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Cierra los procesos en segundo plano de las apps detectadas y te guía para restringir su actividad."
+                android:text="Cierra procesos en segundo plano y te guía a restringir apps."
                 android:textColor="@color/text_main" android:textSize="14sp"
                 android:lineSpacingExtra="4dp" android:layout_marginTop="10dp" />
 
@@ -253,7 +253,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
             android:background="@drawable/card_bg" android:padding="16dp"
-            android:text="Android no permite que una app apague otras por la fuerza: Hyperion cierra sus procesos en segundo plano y te guía a los ajustes del sistema para restringirlas. La autonomía mostrada es una estimación según tu ritmo de descarga reciente."
+            android:text="No se pueden forzar cierres: se detienen procesos en segundo plano. Autonomía estimada."
             android:textColor="@color/text_muted" android:textSize="13sp"
             android:lineSpacingExtra="4dp" />
     </LinearLayout>

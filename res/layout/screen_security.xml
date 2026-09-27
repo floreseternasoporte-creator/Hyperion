@@ -68,7 +68,8 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="18dp" android:background="@drawable/btn_primary"
             android:gravity="center" android:padding="16dp"
-            android:text="🛡 ESCANEAR TELÉFONO" android:textColor="#FFFFFF"
+            android:drawableStart="@drawable/ic_shield_mini" android:drawablePadding="10dp"
+            android:text="ESCANEAR TELÉFONO" android:textColor="#FFFFFF"
             android:textSize="16sp" android:textStyle="bold" />
 
         <TextView android:id="@+id/sec_summary"
@@ -97,7 +98,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:background="@drawable/card_bg" android:padding="16dp"
-            android:text="Centinela analiza las apps instaladas en 4 fases visibles: compara el SHA-256 del APK con la base de firmas (actualizable desde GitHub), inspecciona el código buscando APIs de malware, revisa el certificado firmante y audita combinaciones de permisos peligrosas. Al instalarse una app nueva la revisa en tiempo real, y las amenazas se pueden desinstalar o poner en cuarentena de red."
+            android:text="Analiza cada app: firmas, código, certificado y permisos. Amenazas: desinstalar o cuarentena de red."
             android:textColor="@color/text_muted" android:textSize="13sp"
             android:lineSpacingExtra="4dp" />
     </LinearLayout>

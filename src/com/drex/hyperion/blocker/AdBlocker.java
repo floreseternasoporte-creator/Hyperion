@@ -50,6 +50,13 @@ public final class AdBlocker {
     public static final String CAT_MALWARE = "malware";
     public static final String CAT_PHISHING = "phishing";
     public static final String CAT_MINER = "miner";
+    /**
+     * Categoría "doh": dominios bootstrap de DNS cifrado (DoH/DoT). Bloquearlos
+     * fuerza a navegadores/apps a usar el DNS del sistema (nuestro túnel) en
+     * vez de evadir el filtro con DNS cifrado. Siempre activa por defecto;
+     * es parte del escudo base (sin toggle propio en la UI).
+     */
+    public static final String CAT_DOH = "doh";
 
     private static final String PREFS = "hyperion_blocker";
     private static final String KEY_DB_VERSION = "db_version";
@@ -67,6 +74,7 @@ public final class AdBlocker {
     private volatile Set<String> miners = new HashSet<String>();
     private volatile Set<String> phishing = new HashSet<String>();
     private volatile Set<String> malware = new HashSet<String>();
+    private volatile Set<String> doh = new HashSet<String>();
 
     private AdBlocker(Context ctx) {
         appCtx = ctx.getApplicationContext();
@@ -104,8 +112,11 @@ public final class AdBlocker {
         if (len > 0 && d.charAt(len - 1) == '.') d = d.substring(0, len - 1);
 
         // Caminata de sufijos: "a.b.ejemplo.com" -> "b.ejemplo.com" -> ...
+        // El DNS cifrado (DoH/DoT) se chequea primero: es el bypass principal
+        // del filtro y su bloqueo fuerza el fallback al DNS del túnel.
         String cur = d;
         while (true) {
+            if (doh.contains(cur)) return isEnabled(CAT_DOH) ? CAT_DOH : null;
             if (ads.contains(cur)) return isEnabled(CAT_ADS) ? CAT_ADS : null;
             if (trackers.contains(cur)) return isEnabled(CAT_TRACKER) ? CAT_TRACKER : null;
             if (miners.contains(cur)) return isEnabled(CAT_MINER) ? CAT_MINER : null;
@@ -134,6 +145,9 @@ public final class AdBlocker {
         return new int[]{ads.size(), trackers.size(),
                 miners.size() + phishing.size() + malware.size()};
     }
+
+    /** Nº de dominios bootstrap DoH/DoT bloqueados (categoría "doh"). */
+    public int getDohCount() { return doh.size(); }
 
     /** Versión de las listas, p. ej. "v1" (bundled) o "v2" (remota). */
     public String getDbVersion() {
@@ -194,10 +208,12 @@ public final class AdBlocker {
         Set<String> mn = new HashSet<String>();
         Set<String> ph = new HashSet<String>();
         Set<String> mw = new HashSet<String>();
+        Set<String> dh = new HashSet<String>();
 
         loadRaw(R.raw.ads, a, null);
         loadRaw(R.raw.trackers, t, null);
         loadRaw(R.raw.threats, null, new ThreatSink(mn, ph, mw));
+        loadRaw(R.raw.doh, dh, null);
 
         // Fusión con las remotas descargadas (unión; la remota nunca
         // elimina dominios de la bundled, solo agrega).
@@ -211,6 +227,7 @@ public final class AdBlocker {
         miners = mn;
         phishing = ph;
         malware = mw;
+        doh = dh;
     }
 
     private static final class ThreatSink {

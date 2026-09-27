@@ -161,6 +161,7 @@ public class SecurityController {
         summary.setVisibility(View.GONE);
         radar.setScanning(true);
         status.setText("Escaneando…");
+        status.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         status.setTextColor(0xFF9AA3FF);
         btnScan.setAlpha(0.4f);
 
@@ -435,13 +436,18 @@ public class SecurityController {
             threatsBox.addView(v);
         }
         if (dangers == 0 && warns == 0) {
-            status.setText("Teléfono limpio ✓");
+            status.setText("Teléfono limpio");
+            status.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_check_circle, 0, 0, 0);
+            status.setCompoundDrawablePadding(10);
             status.setTextColor(0xFF3DFF9C);
         } else if (dangers == 0) {
             status.setText(warns + " avisos");
+            status.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             status.setTextColor(0xFFFFB020);
         } else {
             status.setText(dangers + " amenazas");
+            status.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             status.setTextColor(0xFFFF4D5E);
         }
         summary.setText("Analizadas " + appsScanned + " apps y tu carpeta Descargas.\n"
@@ -476,9 +482,14 @@ public class SecurityController {
             View v = inf.inflate(R.layout.item_history, historyBox, false);
             ((TextView) v.findViewById(R.id.hist_title))
                     .setText(df.format(new Date(r.date)) + " · " + r.apps + " apps");
-            String sub = r.threats == 0 && r.warnings == 0 ? "Limpio ✓"
+            boolean clean = r.threats == 0 && r.warnings == 0;
+            String sub = clean ? "Limpio"
                     : r.threats + " peligros · " + r.warnings + " avisos";
-            ((TextView) v.findViewById(R.id.hist_sub)).setText(sub);
+            TextView subTv = (TextView) v.findViewById(R.id.hist_sub);
+            subTv.setText(sub);
+            subTv.setCompoundDrawablesWithIntrinsicBounds(
+                    clean ? R.drawable.ic_check_circle : 0, 0, 0, 0);
+            subTv.setCompoundDrawablePadding(6);
             v.findViewById(R.id.hist_dot).setBackgroundColor(
                     (r.threats == 0 && r.warnings == 0) ? 0xFF3DFF9C
                             : (r.threats > 0 ? 0xFFFF4D5E : 0xFFFFB020));

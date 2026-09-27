@@ -182,6 +182,13 @@
                 android:textSize="12sp" android:layout_marginTop="8dp" />
         </LinearLayout>
 
+        <!-- Registro DNS en vivo -->
+        <Button android:id="@+id/shield_dns_log"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:background="@drawable/btn_primary"
+            android:text="Registro DNS en vivo" android:textColor="#FFFFFF"
+            android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+
         <!-- Apps que más consumían -->
         <LinearLayout android:id="@+id/shield_apps_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -210,7 +217,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
             android:background="@drawable/card_bg" android:padding="16dp"
-            android:text="Hyperion no regala datos: recupera los que los anuncios y rastreadores te robaban. El ahorro mostrado es una estimación (cada petición bloqueada evita una descarga aproximada: anuncios ~120 KB, rastreadores ~40 KB, amenazas ~60 KB, mineros ~80 KB), no una medición exacta de tu operadora."
+            android:text="El ahorro es una estimación por petición bloqueada, no una medición de tu operadora."
             android:textColor="@color/text_muted" android:textSize="13sp"
             android:lineSpacingExtra="4dp" />
     </LinearLayout>

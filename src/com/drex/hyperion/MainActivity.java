@@ -12,11 +12,14 @@ import android.widget.TextView;
 import com.drex.hyperion.battery.BatteryController;
 import com.drex.hyperion.blocker.ShieldController;
 import com.drex.hyperion.mobile.MobileController;
+import com.drex.hyperion.ovpn.OvpnConnector;
+import com.drex.hyperion.ovpn.OvpnVpnService;
 import com.drex.hyperion.ui.Cine;
 
 /** Actividad principal: VPN · Velocidad · Seguridad · Escudo · Batería · Móvil. */
 public class MainActivity extends Activity {
     private static final int REQ_VPN = 100;
+    private static final int REQ_OVPN = 101;
     private static final int TAB_COUNT = 6;
 
     private View vpnScreen, speedScreen, securityScreen, shieldScreen;
@@ -123,8 +126,10 @@ public class MainActivity extends Activity {
 
     // ---------- VPN ----------
 
-    /** Inicia el flujo de permiso + servicio VPN. */
+    /** Inicia el flujo de permiso + servicio VPN (modo local). */
     public void startVpn() {
+        // Exclusión mutua: el modo local detiene el túnel remoto si estaba activo.
+        OvpnConnector.disconnect(this);
         Intent prep = VpnService.prepare(this);
         if (prep != null) {
             try { startActivityForResult(prep, REQ_VPN); }
@@ -135,17 +140,59 @@ public class MainActivity extends Activity {
     }
 
     public void stopVpn() {
-        stopService(new Intent(this, HyperionVpnService.class));
+        // Detiene AMBOS modos (el que esté activo; el otro es no-op).
+        try { stopService(new Intent(this, HyperionVpnService.class)); }
+        catch (Exception ignored) {}
+        OvpnConnector.disconnect(this);
     }
 
     private void doStartVpn() {
         startService(new Intent(this, HyperionVpnService.class));
     }
 
+    // ---------- VPN remota (OpenVPN / VPNGate) ----------
+
+    private VpnGateServer pendingRemoteServer;
+
+    /** Inicia el flujo de permiso + túnel OpenVPN real al servidor indicado. */
+    public void startRemoteVpn(VpnGateServer server) {
+        pendingRemoteServer = server;
+        Intent prep = VpnService.prepare(this);
+        if (prep != null) {
+            try { startActivityForResult(prep, REQ_OVPN); }
+            catch (Exception ignored) {}
+        } else {
+            doStartRemoteVpn();
+        }
+    }
+
+    private void doStartRemoteVpn() {
+        if (pendingRemoteServer == null) return;
+        String err = OvpnConnector.connect(this, pendingRemoteServer);
+        if (err != null) {
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("No se pudo conectar")
+                    .setMessage(err)
+                    .setPositiveButton("Entendido", null)
+                    .show();
+        }
+        pendingRemoteServer = null;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_VPN && resultCode == RESULT_OK) doStartVpn();
+        if (requestCode == REQ_VPN) {
+            if (resultCode == RESULT_OK) {
+                doStartVpn();
+            } else if (vpnController != null) {
+                // Barrido Hyperion 2.2: si el usuario cancela el diálogo de
+                // permiso, LaunchButton.launching quedaba true para siempre y
+                // el botón dejaba de responder a todos los taps.
+                vpnController.cancelLaunch();
+            }
+        }
+        if (requestCode == REQ_OVPN && resultCode == RESULT_OK) doStartRemoteVpn();
     }
 
     @Override

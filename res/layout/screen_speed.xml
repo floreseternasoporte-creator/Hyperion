@@ -80,7 +80,8 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="12dp" android:background="@drawable/card_bg"
             android:gravity="center" android:padding="16dp"
-            android:text="⚡ OPTIMIZAR CONEXIÓN" android:textColor="@color/cyan"
+            android:drawableStart="@drawable/ic_bolt" android:drawablePadding="10dp"
+            android:text="OPTIMIZAR CONEXIÓN" android:textColor="@color/cyan"
             android:textSize="15sp" android:textStyle="bold" />
 
         <LinearLayout android:id="@+id/optimize_card"
@@ -105,7 +106,9 @@
             android:orientation="vertical" android:background="@drawable/card_bg"
             android:padding="16dp" android:layout_marginTop="10dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="⚡ DNS ultrarrápido" android:textColor="@color/cyan"
+                android:drawableStart="@drawable/ic_bolt" android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:text="DNS ultrarrápido" android:textColor="@color/cyan"
                 android:textSize="15sp" android:textStyle="bold" />
             <TextView android:id="@+id/boost_dns_value"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -113,7 +116,7 @@
                 android:textSize="20sp" android:textStyle="bold"
                 android:layout_marginTop="6dp" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Tus consultas van a 1.1.1.1 en vez del DNS lento de tu operadora. Sin root, esto sí reduce la latencia al abrir sitios y apps."
+                android:text="DNS 1.1.1.1 en vez del lento de tu operadora: abre sitios y apps más rápido."
                 android:textColor="@color/text_muted" android:textSize="13sp"
                 android:lineSpacingExtra="4dp" android:layout_marginTop="6dp" />
         </LinearLayout>
@@ -123,7 +126,9 @@
             android:orientation="vertical" android:background="@drawable/card_bg"
             android:padding="16dp" android:layout_marginTop="10dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="🛡 Bloqueo de rastreadores" android:textColor="@color/cyan"
+                android:drawableStart="@drawable/ic_shield_mini" android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:text="Bloqueo de rastreadores" android:textColor="@color/cyan"
                 android:textSize="15sp" android:textStyle="bold" />
             <TextView android:id="@+id/boost_block_value"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -131,7 +136,7 @@
                 android:textSize="20sp" android:textStyle="bold"
                 android:layout_marginTop="6dp" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Dominios de anuncios, rastreadores y telemetría bloqueados a nivel DNS: menos conexiones, menos datos, páginas que cargan antes."
+                android:text="Anuncios, rastreadores y telemetría bloqueados a nivel DNS."
                 android:textColor="@color/text_muted" android:textSize="13sp"
                 android:lineSpacingExtra="4dp" android:layout_marginTop="6dp" />
         </LinearLayout>
@@ -141,7 +146,9 @@
             android:orientation="vertical" android:background="@drawable/card_bg"
             android:padding="16dp" android:layout_marginTop="10dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="💾 Caché DNS local" android:textColor="@color/cyan"
+                android:drawableStart="@drawable/ic_save" android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:text="Caché DNS local" android:textColor="@color/cyan"
                 android:textSize="15sp" android:textStyle="bold" />
             <TextView android:id="@+id/boost_cache_value"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -158,7 +165,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="18dp" android:layout_marginBottom="24dp"
             android:background="@drawable/card_bg" android:padding="16dp"
-            android:text="Nota honesta: la velocidad bruta (Mbps) la pone tu operadora — ninguna app puede aumentarla sin root. Lo que Hyperion sí hace: resolver DNS más rápido y eliminar el desperdicio de rastreadores y anuncios."
+            android:text="La velocidad bruta la pone tu operadora. Hyperion acelera el DNS y elimina rastreadores."
             android:textColor="@color/text_muted" android:textSize="13sp"
             android:lineSpacingExtra="4dp" />
     </LinearLayout>

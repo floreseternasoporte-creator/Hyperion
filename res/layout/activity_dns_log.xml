@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="REGISTRO DNS EN VIVO" android:textColor="@color/cyan"
+        android:textSize="13sp" android:letterSpacing="0.35" />
+
+    <TextView android:id="@+id/dns_log_stats"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Esperando consultas…" android:textColor="@color/text_main"
+        android:textSize="15sp" android:textStyle="bold" android:layout_marginTop="6dp" />
+
+    <!-- Aviso de DNS privado estricto (DoT): evade el filtro -->
+    <LinearLayout android:id="@+id/dns_log_pdns_banner"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:visibility="gone"
+        android:background="@drawable/card_bg" android:padding="14dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="DNS privado activo (modo estricto)"
+            android:drawableStart="@drawable/ic_warn" android:drawablePadding="6dp"
+            android:textColor="#FFB020" android:textSize="14sp" android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Desactiva el DNS privado en Ajustes → Red e Internet."
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:layout_marginTop="6dp" android:lineSpacingExtra="3dp" />
+
+        <Button android:id="@+id/dns_log_pdns_btn"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+            android:text="Abrir ajustes de DNS" android:textColor="#FFFFFF"
+            android:textSize="14sp" android:textStyle="bold" android:padding="10dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="En Chrome: chrome://settings/security → desactiva &#34;Usar DNS seguro&#34;."
+        android:textColor="@color/text_muted" android:textSize="12sp"
+        android:layout_marginTop="10dp" android:lineSpacingExtra="3dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_marginTop="10dp">
+
+        <Button android:id="@+id/dns_log_pause"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:background="@drawable/btn_primary"
+            android:text="Pausar" android:textColor="#FFFFFF"
+            android:textSize="14sp" android:textStyle="bold" />
+
+        <Button android:id="@+id/dns_log_clear"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginStart="8dp"
+            android:background="@drawable/btn_primary"
+            android:text="Limpiar" android:textColor="#FFFFFF"
+            android:textSize="14sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/dns_log_list"
+        android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:layout_marginTop="10dp"
+        android:divider="#22FFFFFF" android:dividerHeight="1dp" />
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Registro real de consultas DNS del túnel: ✕ bloqueada, ✓ permitida."
+        android:textColor="@color/text_muted" android:textSize="11sp"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

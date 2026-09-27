@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.drex.hyperion"
-    android:versionCode="3"
-    android:versionName="2.1">
+    android:versionCode="4"
+    android:versionName="2.2">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <!-- Acceso especial (se concede en Ajustes): estadísticas de uso para el análisis de batería -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <!-- Plegar el consumo del plan de datos al reiniciar el teléfono -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_hyperion"
         android:label="Hyperion"
-        android:theme="@style/HyperionTheme">
+        android:theme="@style/HyperionTheme"
+        android:extractNativeLibs="true">
 
         <activity android:name=".OnboardingActivity"
             android:exported="true"
@@ -32,12 +37,29 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
+        <!-- Registro DNS en vivo (bloqueador de anuncios) -->
+        <activity android:name=".DnsLogActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <service android:name=".HyperionVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
+        </service>
+
+        <!-- VPN remota real: túnel OpenVPN (núcleo ics-openvpn) a servidores VPNGate -->
+        <service android:name=".ovpn.OvpnVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Túnel VPN OpenVPN a servidores remotos gratuitos (VPNGate)." />
         </service>
 
         <!-- Protección en tiempo real: avisa al instalar apps (exento del veto
@@ -47,6 +69,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Plan de datos: pliega el consumo previo al reiniciar el teléfono -->
+        <receiver android:name=".mobile.PlanBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>

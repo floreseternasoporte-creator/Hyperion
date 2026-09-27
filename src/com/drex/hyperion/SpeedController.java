@@ -242,6 +242,10 @@ public class SpeedController {
         testing = false;
         setPhase("Optimización completa");
         optimizeText.setText(r.summary());
+        // Vector de estado que reemplaza los símbolos del informe en texto.
+        optimizeText.setCompoundDrawablesWithIntrinsicBounds(0,
+                r.vpnOn ? R.drawable.ic_check_circle : R.drawable.ic_warn, 0, 0);
+        optimizeText.setCompoundDrawablePadding(12);
         optimizeCard.setVisibility(View.VISIBLE);
         optimizeCard.setAlpha(0f); optimizeCard.setTranslationY(24f);
         optimizeCard.animate().alpha(1f).translationY(0f)

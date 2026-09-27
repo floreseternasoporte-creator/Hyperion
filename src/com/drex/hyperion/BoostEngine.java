@@ -245,7 +245,7 @@ public class BoostEngine {
         /** Resumen honesto en español para la tarjeta de resultados. */
         public String summary() {
             StringBuilder sb = new StringBuilder();
-            sb.append("⚡ Optimización completa\n\n");
+            sb.append("Optimización completa\n\n");
             sb.append("Ping: ").append(ms(pingBeforeMs))
                     .append(" → ").append(ms(pingAfterMs)).append("\n");
             sb.append("Resolución DNS: ").append(ms(dnsBeforeMs))
@@ -260,19 +260,19 @@ public class BoostEngine {
             }
             sb.append("\n");
             if (vpnOn && !vpnWasOn) {
-                sb.append("✓ Túnel VPN activado · ");
+                sb.append("Túnel VPN activado · ");
             } else if (vpnOn) {
-                sb.append("✓ Túnel VPN activo · ");
+                sb.append("Túnel VPN activo · ");
             } else {
-                sb.append("⚠ Túnel VPN no activado: sin él no hay bloqueo de rastreadores. · ");
+                sb.append("Túnel VPN no activado: sin él no hay bloqueo de rastreadores. · ");
             }
             sb.append("Caché DNS limpiada · Lista de ")
                     .append(blocklistSize).append(" dominios aplicada.");
             if (vpnWasOn) {
-                sb.append("\nℹ El túnel ya estaba activo: la mejora medida viene de la caché limpia.");
+                sb.append("\nEl túnel ya estaba activo: la mejora medida viene de la caché limpia.");
             }
             if (!vpnOn) {
-                sb.append("\nℹ Activa el VPN y repite la prueba para medir el DNS rápido y el bloqueo.");
+                sb.append("\nActiva el VPN y repite la prueba para medir el DNS rápido y el bloqueo.");
             }
             return sb.toString();
         }

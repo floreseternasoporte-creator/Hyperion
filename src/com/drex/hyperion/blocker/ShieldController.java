@@ -53,6 +53,7 @@ public class ShieldController {
     private Switch tglAds, tglTrackers, tglThreats, tglMiners;
     private TextView nAds, nTrackers, nThreats, nMiners;
     private Button updateBtn;
+    private Button dnsLogBtn;
     private TextView updateStatus;
     private LinearLayout appsBox;
     private TextView appsEmpty;
@@ -86,6 +87,13 @@ public class ShieldController {
         nMiners = root.findViewById(R.id.shield_n_miners);
         updateBtn = root.findViewById(R.id.shield_update);
         updateStatus = root.findViewById(R.id.shield_update_status);
+        dnsLogBtn = root.findViewById(R.id.shield_dns_log);
+        dnsLogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                activity.startActivity(new android.content.Intent(
+                        activity, com.drex.hyperion.DnsLogActivity.class));
+            }
+        });
         appsBox = root.findViewById(R.id.shield_apps);
         appsEmpty = root.findViewById(R.id.shield_apps_empty);
 
@@ -104,6 +112,7 @@ public class ShieldController {
         int[] ids = {
                 R.id.shield_header, R.id.shield_counter_card, R.id.shield_ring_card,
                 R.id.shield_toggles_card, R.id.shield_update_card,
+                R.id.shield_dns_log,
                 R.id.shield_apps_card, R.id.shield_honest_card
         };
         for (int i = 0; i < ids.length; i++) {
@@ -147,7 +156,7 @@ public class ShieldController {
     private void refreshStatic() {
         AdBlocker ab = AdBlocker.get(activity);
         int[] counts = ab.getListCounts();
-        listsInfo.setText((counts[0] + counts[1] + counts[2])
+        listsInfo.setText((counts[0] + counts[1] + counts[2] + ab.getDohCount())
                 + " dominios · listas " + ab.getDbVersion());
         DataSaver ds = DataSaver.get(activity);
         long[] byCat = ds.getBlockedByCategory();

@@ -88,7 +88,31 @@ public class DnsEngine {
             if (((pkt[0] >> 4) & 0xF) != 4) return;           // solo IPv4
             int ihl = (pkt[0] & 0xF) * 4;
             if (ihl < 20 || pkt.length < ihl + 8) return;
-            if ((pkt[9] & 0xFF) != 17) { stats.dropped.incrementAndGet(); return; } // solo UDP
+            int proto = pkt[9] & 0xFF;
+            if (proto == 6) {                                 // TCP
+                // Cierre del bypass de DNS cifrado: un SYN a una IP DoH/DoT
+                // conocida (puerto 443=DoH, 853=DoT) recibe RST+ACK inmediato
+                // para que el cliente haga fallback al DNS del sistema
+                // (nuestro filtro) en vez de colgarse minutos en silencio.
+                // Cualquier otro TCP se descarta (este túnel solo filtra DNS).
+                byte[] rst = com.drex.hyperion.blocker.PacketUtil.buildTcpRst(pkt);
+                if (rst != null) {
+                    int srcPort = u16(pkt, ihl);
+                    int dstPort = u16(pkt, ihl + 2);
+                    int uid = resolveUid(srcPort, true);
+                    synchronized (tunOut) { tunOut.write(rst); }
+                    stats.bytesOut.addAndGet(rst.length);
+                    stats.blocked.incrementAndGet();
+                    HyperionVpnService.fireDnsEvent(
+                            "DoH/DoT→" + ipStr(pkt, 16) + ":" + dstPort,
+                            uid, true,
+                            com.drex.hyperion.blocker.AdBlocker.CAT_DOH);
+                } else {
+                    stats.dropped.incrementAndGet();
+                }
+                return;
+            }
+            if (proto != 17) { stats.dropped.incrementAndGet(); return; } // solo UDP
             int dstPort = u16(pkt, ihl + 2);
             if (dstPort != 53) { stats.dropped.incrementAndGet(); return; }         // solo DNS
             int udpLen = u16(pkt, ihl + 4);
@@ -102,9 +126,9 @@ public class DnsEngine {
 
             // ---- Cuarentena de red por UID (antes de procesar) ----
             int srcPort = u16(pkt, ihl);
-            int uid = resolveUid(srcPort);
+            int uid = resolveUid(srcPort, false);
             if (uid >= 0 && HyperionVpnService.isUidQuarantined(uid)) {
-                byte[] nx = buildNxdomainResponse(query);
+                byte[] nx = com.drex.hyperion.blocker.PacketUtil.buildNxdomainResponse(query);
                 byte[] ipPkt = buildIpResponse(pkt, ihl, nx);
                 synchronized (tunOut) { tunOut.write(ipPkt); }
                 stats.bytesOut.addAndGet(ipPkt.length);
@@ -117,10 +141,11 @@ public class DnsEngine {
             if (q == null) return;
 
             byte[] dnsResp;
-            // Bloqueo vía AdBlocker (listas amplias: ads/trackers/malware/phishing/miners).
+            // Bloqueo vía AdBlocker (listas amplias: ads/trackers/malware/phishing/miners/doh).
             // Fallback a Blocklist si el módulo escudo no estuviera disponible.
             String category = null;
             boolean adBlocked;
+            boolean dohHost = false;
             try {
                 com.drex.hyperion.blocker.AdBlocker ab =
                         com.drex.hyperion.blocker.AdBlocker.get(service);
@@ -128,9 +153,22 @@ public class DnsEngine {
                 adBlocked = category != null;
             } catch (Exception e) {
                 adBlocked = Blocklist.isBlocked(q.name);
+                if (!adBlocked && Blocklist.isDohHost(q.name)) {
+                    adBlocked = true;
+                    dohHost = true;
+                    category = com.drex.hyperion.blocker.AdBlocker.CAT_DOH;
+                }
             }
             if (adBlocked) {
-                dnsResp = buildBlockedResponse(query, q.questionLen);
+                if (com.drex.hyperion.blocker.AdBlocker.CAT_DOH.equals(category) || dohHost) {
+                    // Bootstrap de DNS cifrado: NXDOMAIN para que el cliente
+                    // aborte el DoH/DoT y use el DNS del sistema (nosotros).
+                    dnsResp = com.drex.hyperion.blocker.PacketUtil.buildNxdomainResponse(query);
+                } else {
+                    // Respuesta honesta según qtype: A→0.0.0.0, AAAA→NODATA.
+                    dnsResp = com.drex.hyperion.blocker.PacketUtil.buildBlockedResponse(
+                            query, q.qtype, q.questionLen);
+                }
                 stats.blocked.incrementAndGet();
             } else {
                 dnsResp = resolveWithCache(q, query, stats);
@@ -146,14 +184,18 @@ public class DnsEngine {
     }
 
     /**
-     * Resuelve el UID dueño del socket UDP cuyo puerto local es srcPort.
-     * Lee /proc/net/udp y /proc/net/udp6 buscando la dirección local
-     * 0A080002 (10.8.0.2, la IP del TUN) con ese puerto. Columna uid = índice 9.
-     * Devuelve -1 si no se puede resolver (fail-open: el paquete se permite).
+     * Resuelve el UID dueño del socket cuyo puerto local es srcPort.
+     * Lee /proc/net/udp{,6} (o /proc/net/tcp{,6} si {@code tcp}) buscando la
+     * dirección local 0A080002 (10.8.0.2, la IP del TUN) con ese puerto.
+     * Columna uid = índice 9. Devuelve -1 si no se puede resolver
+     * (fail-open: el paquete se permite).
      */
-    private static int resolveUid(int srcPort) {
+    private static int resolveUid(int srcPort, boolean tcp) {
         String want = ":" + String.format(Locale.US, "%04X", srcPort & 0xFFFF);
-        for (String path : new String[]{"/proc/net/udp", "/proc/net/udp6"}) {
+        String[] paths = tcp
+                ? new String[]{"/proc/net/tcp", "/proc/net/tcp6"}
+                : new String[]{"/proc/net/udp", "/proc/net/udp6"};
+        for (String path : paths) {
             BufferedReader br = null;
             try {
                 br = new BufferedReader(new FileReader(path));
@@ -182,6 +224,12 @@ public class DnsEngine {
         return -1; // no se resolvió: fail-open
     }
 
+    /** "a.b.c.d" desde 4 bytes en off. */
+    private static String ipStr(byte[] b, int off) {
+        return (b[off] & 0xFF) + "." + (b[off + 1] & 0xFF) + "."
+                + (b[off + 2] & 0xFF) + "." + (b[off + 3] & 0xFF);
+    }
+
     private static class ParsedQuery {
         String name; int qtype; int questionLen; // bytes desde el inicio de la pregunta
     }
@@ -207,37 +255,6 @@ public class DnsEngine {
         q.qtype = u16(query, off);
         q.questionLen = (off + 4) - 12;
         return q;
-    }
-
-    /** Respuesta A=0.0.0.0 para dominios bloqueados. */
-    private byte[] buildBlockedResponse(byte[] query, int questionLen) {
-        byte[] r = new byte[12 + questionLen + 16];
-        r[0] = query[0]; r[1] = query[1];          // ID
-        r[2] = (byte) 0x81; r[3] = (byte) 0x80;    // QR|RD|RA, RCODE=0
-        putU16(r, 4, 1);                            // QDCOUNT
-        putU16(r, 6, 1);                            // ANCOUNT
-        putU16(r, 8, 0); putU16(r, 10, 0);
-        System.arraycopy(query, 12, r, 12, questionLen);
-        int a = 12 + questionLen;
-        r[a++] = (byte) 0xC0; r[a++] = (byte) 0x0C; // puntero al QNAME
-        putU16(r, a, 1); a += 2;                     // TYPE A
-        putU16(r, a, 1); a += 2;                     // CLASS IN
-        r[a++] = 0; r[a++] = 0; r[a++] = 0; r[a++] = 60; // TTL 60
-        putU16(r, a, 4); a += 2;                     // RDLENGTH
-        r[a++] = 0; r[a++] = 0; r[a++] = 0; r[a] = 0;    // 0.0.0.0
-        return r;
-    }
-
-    /** Respuesta NXDOMAIN (RCODE=3) para apps en cuarentena: sin resolución de nombres. */
-    private byte[] buildNxdomainResponse(byte[] query) {
-        int qlen = query.length - 12;
-        byte[] r = new byte[12 + qlen];
-        r[0] = query[0]; r[1] = query[1];          // ID
-        r[2] = (byte) 0x81; r[3] = (byte) 0x83;    // QR|RD|RA, RCODE=3 (NXDOMAIN)
-        putU16(r, 4, 1);                            // QDCOUNT
-        putU16(r, 6, 0); putU16(r, 8, 0); putU16(r, 10, 0);
-        System.arraycopy(query, 12, r, 12, qlen);
-        return r;
     }
 
     private byte[] resolveWithCache(ParsedQuery q, byte[] query, VpnStats stats) {

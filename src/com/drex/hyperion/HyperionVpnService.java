@@ -102,9 +102,30 @@ public class HyperionVpnService extends VpnService {
     // ---- Eventos DNS (contrato con el bloqueador de anuncios / ahorro) ----
     private static volatile com.drex.hyperion.blocker.DnsEventListener dnsListener;
 
+    /**
+     * Listeners ADICIONALES (multiplex): el slot legacy de
+     * {@link #setDnsEventListener} sigue siendo de un solo consumidor
+     * (DataSaver), pero pantallas como el "Registro DNS en vivo" se suscriben
+     * aquí sin pisarlo.
+     */
+    private static final java.util.concurrent.CopyOnWriteArrayList<
+            com.drex.hyperion.blocker.DnsEventListener> extraDnsListeners =
+            new java.util.concurrent.CopyOnWriteArrayList<
+                    com.drex.hyperion.blocker.DnsEventListener>();
+
     /** Registra el listener de eventos DNS (lo usa DataSaver del escudo). */
     public static void setDnsEventListener(com.drex.hyperion.blocker.DnsEventListener l) {
         dnsListener = l;
+    }
+
+    /** Suscribe un listener adicional sin tocar el slot legacy. */
+    public static void addDnsEventListener(com.drex.hyperion.blocker.DnsEventListener l) {
+        if (l != null) extraDnsListeners.addIfAbsent(l);
+    }
+
+    /** Da de baja un listener adicional. */
+    public static void removeDnsEventListener(com.drex.hyperion.blocker.DnsEventListener l) {
+        if (l != null) extraDnsListeners.remove(l);
     }
 
     /** Invocado por DnsEngine por cada consulta DNS procesada por el túnel. */
@@ -112,6 +133,10 @@ public class HyperionVpnService extends VpnService {
         com.drex.hyperion.blocker.DnsEventListener l = dnsListener;
         if (l != null) {
             try { l.onDnsEvent(domain, uid, blocked, category); }
+            catch (Exception ignored) {}
+        }
+        for (com.drex.hyperion.blocker.DnsEventListener e : extraDnsListeners) {
+            try { e.onDnsEvent(domain, uid, blocked, category); }
             catch (Exception ignored) {}
         }
     }
@@ -130,7 +155,15 @@ public class HyperionVpnService extends VpnService {
             requestShutdown();
             return START_NOT_STICKY;
         }
-        if (running.get()) return START_STICKY;
+        // Barrido Hyperion 2.2: el sistema reinicia los servicios START_STICKY con
+        // intent null tras matar el proceso (p. ej. al barrer la app de recientes).
+        // Ese reinicio reconectaba el VPN solo ("el botón DESCONECTAR no funciona").
+        // El túnel solo se establece por petición explícita del usuario.
+        if (intent == null) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+        if (running.get()) return START_NOT_STICKY;
         Builder b = new Builder();
         b.setSession("Hyperion Shield");
         b.addAddress("10.8.0.2", 32);
@@ -138,9 +171,17 @@ public class HyperionVpnService extends VpnService {
         b.addDnsServer("10.8.0.1");
         b.addRoute("10.8.0.1", 32);
         // Secuestra también DNS hardcodeados en apps (8.8.8.8, 1.1.1.1, etc.)
+        // y las IPs de proveedores DoH/DoT conocidos: su tráfico 443/853
+        // entra al TUN y DnsEngine lo rechaza con RST inmediato para forzar
+        // el fallback al DNS del sistema (nuestro filtro).
+        // NOTA: la resolución propia del motor usa sockets protect()ed
+        // (fuera del VPN), así que estas rutas NO rompen el upstream.
         for (String ip : new String[]{
                 "8.8.8.8", "8.8.4.4", "1.1.1.1", "1.0.0.1",
-                "9.9.9.9", "208.67.222.222", "208.67.220.220"}) {
+                "9.9.9.9", "149.112.112.112",
+                "208.67.222.222", "208.67.220.220",
+                "94.140.14.14", "94.140.15.15",
+                "185.228.168.168", "185.228.169.168"}) {
             b.addRoute(ip, 32);
         }
         b.setMtu(1500);
@@ -162,7 +203,10 @@ public class HyperionVpnService extends VpnService {
         new Thread(new Runnable() {
             @Override public void run() { readLoop(); }
         }, "hyperion-tun").start();
-        return START_STICKY;
+        // Barrido Hyperion 2.2: START_NOT_STICKY (antes STICKY). Un servicio STICKY
+        // resucita tras muerte del proceso y reconectaba el VPN sin pedirlo
+        // (reconexión fantasma). Muerto queda muerto hasta que el usuario toque.
+        return START_NOT_STICKY;
     }
 
     /** Detiene el túnel de forma limpia: cierra el TUN para que el loop de lectura salga. */

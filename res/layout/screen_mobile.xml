@@ -16,44 +16,97 @@
 
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="HYPERION MOBILE" android:textColor="@color/cyan"
+                android:text="DATOS MÓVILES" android:textColor="@color/cyan"
                 android:textSize="13sp" android:letterSpacing="0.35"
                 android:layout_marginTop="12dp" />
 
             <TextView android:id="@+id/mobile_status"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Nuestra futura operadora" android:textColor="@color/text_muted"
+                android:text="Centro de comando de datos" android:textColor="@color/text_muted"
                 android:textSize="22sp" android:textStyle="bold"
                 android:layout_marginTop="6dp" />
         </LinearLayout>
 
-        <!-- Panel honesto -->
-        <LinearLayout android:id="@+id/mobile_honest_card"
+        <!-- Mi plan -->
+        <LinearLayout android:id="@+id/mobile_plan_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/card_bg"
             android:padding="18dp" android:layout_marginTop="18dp">
 
-            <TextView
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="EL PLAN" android:textColor="@color/text_muted"
-                android:textSize="12sp" android:letterSpacing="0.25" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="MI PLAN" android:textColor="@color/text_muted"
+                    android:textSize="12sp" android:letterSpacing="0.25" />
+                <Button android:id="@+id/mobile_plan_edit"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Cambiar" android:textColor="@color/cyan"
+                    android:textSize="13sp" android:background="@null"
+                    android:padding="4dp" android:minWidth="0dp" android:minHeight="0dp" />
+            </LinearLayout>
 
-            <TextView
+            <TextView android:id="@+id/mobile_plan_used"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Estamos construyendo Hyperion Mobile: nuestra propia operadora virtual (MVNO) con eSIM, para darte planes justos con la app Hyperion incluida."
-                android:textColor="@color/text_main" android:textSize="15sp"
-                android:textStyle="bold" android:lineSpacingExtra="4dp"
+                android:text="Sin plan configurado" android:textColor="@color/text_main"
+                android:textSize="20sp" android:textStyle="bold"
                 android:layout_marginTop="10dp" />
 
-            <TextView
+            <ProgressBar android:id="@+id/mobile_plan_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="12dp"
+                android:layout_marginTop="12dp"
+                android:max="1000" android:progress="0"
+                android:progressDrawable="@drawable/plan_bar" />
+
+            <TextView android:id="@+id/mobile_plan_left"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Verdad importante: ninguna app puede regalarte internet gratis — los datos móviles los controla tu operadora actual y cada GB cuesta dinero real. Cuando Hyperion Mobile exista, competiremos con precio justo, no con promesas imposibles."
-                android:textColor="@color/text_muted" android:textSize="13sp"
-                android:lineSpacingExtra="4dp" android:layout_marginTop="10dp" />
+                android:text="" android:textColor="@color/text_muted"
+                android:textSize="13sp" android:layout_marginTop="10dp" />
+
+            <TextView android:id="@+id/mobile_plan_pace"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="@color/indigo"
+                android:textSize="13sp" android:textStyle="bold"
+                android:layout_marginTop="4dp" />
+
+            <!-- Configuración del plan -->
+            <LinearLayout android:id="@+id/mobile_plan_config"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText android:id="@+id/mobile_plan_gb"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/card_bg"
+                        android:hint="GB del plan (ej. 8)" android:textColorHint="@color/text_muted"
+                        android:textColor="@color/text_main" android:textSize="15sp"
+                        android:padding="12dp" android:singleLine="true"
+                        android:inputType="numberDecimal" />
+                    <EditText android:id="@+id/mobile_plan_day"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:layout_marginStart="6dp"
+                        android:background="@drawable/card_bg"
+                        android:hint="Día del ciclo (ej. 5)" android:textColorHint="@color/text_muted"
+                        android:textColor="@color/text_main" android:textSize="15sp"
+                        android:padding="12dp" android:singleLine="true"
+                        android:inputType="number" />
+                </LinearLayout>
+
+                <Button android:id="@+id/mobile_plan_save"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                    android:text="Guardar plan" android:textColor="#FFFFFF"
+                    android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Tu consumo real -->
+        <!-- Apps que más consumen -->
         <LinearLayout android:id="@+id/mobile_data_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -62,34 +115,8 @@
 
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="TU CONSUMO MÓVIL (ESTE CICLO DE ENCENDIDO)" android:textColor="@color/text_muted"
+                android:text="APPS QUE MÁS CONSUMEN (DESDE EL ARRANQUE)" android:textColor="@color/text_muted"
                 android:textSize="12sp" android:letterSpacing="0.25" />
-
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:layout_marginTop="12dp">
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-                    <TextView android:id="@+id/mobile_rx" android:text="–"
-                        android:textColor="@color/cyan" android:textSize="24sp" android:textStyle="bold"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                    <TextView android:text="descargados" android:textColor="@color/text_muted"
-                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                </LinearLayout>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-                    <TextView android:id="@+id/mobile_tx" android:text="–"
-                        android:textColor="@color/indigo" android:textSize="24sp" android:textStyle="bold"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                    <TextView android:text="subidos" android:textColor="@color/text_muted"
-                        android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="APPS QUE MÁS DATOS MÓVILES USAN" android:textColor="@color/text_muted"
-                android:textSize="12sp" android:letterSpacing="0.25"
-                android:layout_marginTop="16dp" />
 
             <TextView android:id="@+id/mobile_apps_empty"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -140,58 +167,61 @@
                 android:textSize="13sp" android:layout_marginTop="10dp" />
         </LinearLayout>
 
-        <!-- Lista de espera -->
+        <!-- Lista de espera: futura operadora -->
         <LinearLayout android:id="@+id/mobile_wait_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/card_bg"
-            android:padding="18dp" android:layout_marginTop="12dp">
+            android:padding="18dp" android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp">
 
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="LISTA DE ESPERA" android:textColor="@color/text_muted"
+                android:text="HYPERION MOBILE — FUTURA OPERADORA" android:textColor="@color/text_muted"
                 android:textSize="12sp" android:letterSpacing="0.25" />
 
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Apúntate y te avisamos cuando Hyperion Mobile esté disponible en tu zona."
+                android:text="Sin internet gratis: te avisamos cuando exista."
                 android:textColor="@color/text_main" android:textSize="14sp"
-                android:lineSpacingExtra="4dp" android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp" />
 
-            <EditText android:id="@+id/mobile_name"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" android:background="@drawable/card_bg"
-                android:hint="Tu nombre" android:textColorHint="@color/text_muted"
-                android:textColor="@color/text_main" android:textSize="15sp"
-                android:padding="12dp" android:singleLine="true" />
-
-            <EditText android:id="@+id/mobile_email"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" android:background="@drawable/card_bg"
-                android:hint="Tu correo" android:textColorHint="@color/text_muted"
-                android:textColor="@color/text_main" android:textSize="15sp"
-                android:padding="12dp" android:singleLine="true"
-                android:inputType="textEmailAddress" />
-
-            <Button android:id="@+id/mobile_join"
+            <Button android:id="@+id/mobile_join_toggle"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
-                android:text="Unirme a la lista" android:textColor="#FFFFFF"
+                android:text="Unirme a la lista de espera" android:textColor="#FFFFFF"
                 android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+
+            <LinearLayout android:id="@+id/mobile_wait_form"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:visibility="gone">
+
+                <EditText android:id="@+id/mobile_name"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" android:background="@drawable/card_bg"
+                    android:hint="Tu nombre" android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_main" android:textSize="15sp"
+                    android:padding="12dp" android:singleLine="true" />
+
+                <EditText android:id="@+id/mobile_email"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:background="@drawable/card_bg"
+                    android:hint="Tu correo" android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_main" android:textSize="15sp"
+                    android:padding="12dp" android:singleLine="true"
+                    android:inputType="textEmailAddress" />
+
+                <Button android:id="@+id/mobile_join"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" android:background="@drawable/btn_primary"
+                    android:text="Confirmar" android:textColor="#FFFFFF"
+                    android:textSize="15sp" android:textStyle="bold" android:padding="12dp" />
+            </LinearLayout>
 
             <TextView android:id="@+id/mobile_join_status"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="" android:textColor="@color/text_muted"
                 android:textSize="12sp" android:layout_marginTop="8dp" />
         </LinearLayout>
-
-        <!-- Nota -->
-        <TextView android:id="@+id/mobile_note_card"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
-            android:background="@drawable/card_bg" android:padding="16dp"
-            android:text="El consumo mostrado se reinicia al apagar el teléfono (lo mide Android desde el arranque). Tu lugar en la lista se guarda solo en este dispositivo por ahora."
-            android:textColor="@color/text_muted" android:textSize="13sp"
-            android:lineSpacingExtra="4dp" />
     </LinearLayout>
 </ScrollView>
